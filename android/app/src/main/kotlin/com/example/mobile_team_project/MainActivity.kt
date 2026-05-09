@@ -7,7 +7,7 @@ import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import java.security.MessageDigest
-
+// 해쉬 값 받아오는 코드
 class MainActivity : FlutterActivity() {
     private val CHANNEL = "keyhash"
 

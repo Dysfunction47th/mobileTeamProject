@@ -39,6 +39,7 @@ dependencies:
   kakao_flutter_sdk_share: ^2.0.0+1
   kakao_flutter_sdk_talk: ^2.0.0+1 # 카카오톡 채널, 카카오톡 소셜, 카카오톡 메시지 API 패키지
   logger: ^2.0.2
+#  pub get 하면 됨 아니면 flutter pub add kakao_flutter_sdk를 터미널에 입력
 dev_dependencies:
   flutter_test:
     sdk: flutter

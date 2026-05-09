@@ -12,14 +12,12 @@ final logger = Logger();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  // 카카오 로그인 초기화
   KakaoSdk.init(
+    // 네이키브 키값 추후 보안을 위해 다른 방식으로 넣을 예정
     nativeAppKey: 'de3a6f72605f417d72017860ecbb092f',
     // javaScriptAppKey: '${YOUR_JAVASCRIPT_APP_KEY}',
-
   );
-
-
   runApp(const MyApp());
 }
 
@@ -81,8 +79,10 @@ class _MyHomePageState extends State<MyHomePage> {
             const SizedBox(height: 30),
 
             ElevatedButton(
+              // 로그인 버튼
               onPressed: () async {
                 await loginWithKakao(context);
+                // loginWithKakao() 함수가 끝날 때까지 기다렸다가 다음 코드를 실행
               },
               child: const Text('카카오 로그인'),
             ),

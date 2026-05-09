@@ -25,6 +25,7 @@ Future<void> logoutWithKakao(BuildContext context) async {
     context,
     MaterialPageRoute(
       builder: (_) => const MyHomePage(title: 'Flutter Demo Home Page'),
+    //  메인 다트로 이동
     ),
         (route) => false,
   );

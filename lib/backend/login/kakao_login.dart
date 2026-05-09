@@ -9,10 +9,28 @@ import 'package:mobile_team_project/backend/user_data/user_data.dart';
 
 
 final logger = Logger();
+// 로그 사용을 위한 final logger 변수 선언
+KakaoUser createKakaoUser(User user) {
+  // 유저 정보를 KakaoUser클래스에 저장하는 함수
+  return KakaoUser(
+    nickname: user.kakaoAccount?.profile?.nickname,
+    gender: user.kakaoAccount?.gender?.name,
+    name: user.kakaoAccount?.name,
+    ageRange: user.kakaoAccount?.ageRange?.name,
+    birthyear: user.kakaoAccount?.birthyear,
+    birthday: user.kakaoAccount?.birthday,
+    phoneNumber: user.kakaoAccount?.phoneNumber,
+  // ?는 널값 오류 방지용
+  );
+}
 
 Future<void> loginWithKakao(BuildContext context) async {
   try {
     if (await AuthApi.instance.hasToken()) {
+      // 만약 로그를 이용해 코드가 31번줄 이상으로 실행을 못하는걸 확인 했을때
+      // 해시값을 확인하면 좋음 (메인액티비티.kt을 확인해서 해시값 확인)
+      // 카카오(내가 저장한 나의 해시값) <-> 나(나의 해시값)
+      // 서로 동일해야지 로그인이 됨
       try {
         AccessTokenInfo tokenInfo = await UserApi.instance.accessTokenInfo();
         OAuthToken? token =
@@ -31,17 +49,8 @@ Future<void> loginWithKakao(BuildContext context) async {
             '생일=${user.kakaoAccount?.birthday}'
             '전화번호=${user.kakaoAccount?.phoneNumber}'
         );
-
-        final kakaoUser = KakaoUser(
-          nickname: user.kakaoAccount?.profile?.nickname,
-          gender: user.kakaoAccount?.gender?.name,
-          name: user.kakaoAccount?.name,
-          ageRange: user.kakaoAccount?.ageRange?.name,
-          birthyear: user.kakaoAccount?.birthyear,
-          birthday: user.kakaoAccount?.birthday,
-          phoneNumber: user.kakaoAccount?.phoneNumber,
-        );
-
+        final kakaoUser = createKakaoUser(user);
+        // 유저정보 넘기기
         if (context.mounted) {
 
           if (!context.mounted) return;
@@ -50,6 +59,7 @@ Future<void> loginWithKakao(BuildContext context) async {
             context,
             MaterialPageRoute(
               builder: (_) =>  OnboardingScreen(user: kakaoUser),
+            // OnboardingScreen로 이동
             ),
           );
 
@@ -85,17 +95,7 @@ Future<void> loginWithKakao(BuildContext context) async {
 
         );
 
-
-        final kakaoUser = KakaoUser(
-          nickname: user.kakaoAccount?.profile?.nickname,
-          gender: user.kakaoAccount?.gender?.name,
-          name: user.kakaoAccount?.name,
-          ageRange: user.kakaoAccount?.ageRange?.name,
-          birthyear: user.kakaoAccount?.birthyear,
-          birthday: user.kakaoAccount?.birthday,
-          phoneNumber: user.kakaoAccount?.phoneNumber,
-        );
-
+        final kakaoUser = createKakaoUser(user);
 
 
         if (context.mounted) {
@@ -128,15 +128,7 @@ Future<void> loginWithKakao(BuildContext context) async {
               '전화번호=${user.kakaoAccount?.phoneNumber}'
           );
 
-          final kakaoUser = KakaoUser(
-            nickname: user.kakaoAccount?.profile?.nickname,
-            gender: user.kakaoAccount?.gender?.name,
-            name: user.kakaoAccount?.name,
-            ageRange: user.kakaoAccount?.ageRange?.name,
-            birthyear: user.kakaoAccount?.birthyear,
-            birthday: user.kakaoAccount?.birthday,
-            phoneNumber: user.kakaoAccount?.phoneNumber,
-          );
+          final kakaoUser = createKakaoUser(user);
 
           if (context.mounted) {
 
@@ -170,16 +162,8 @@ Future<void> loginWithKakao(BuildContext context) async {
             '생일=${user.kakaoAccount?.birthday}'
             '전화번호=${user.kakaoAccount?.phoneNumber}'
         );
+        final kakaoUser = createKakaoUser(user);
 
-        final kakaoUser = KakaoUser(
-          nickname: user.kakaoAccount?.profile?.nickname,
-          gender: user.kakaoAccount?.gender?.name,
-          name: user.kakaoAccount?.name,
-          ageRange: user.kakaoAccount?.ageRange?.name,
-          birthyear: user.kakaoAccount?.birthyear,
-          birthday: user.kakaoAccount?.birthday,
-          phoneNumber: user.kakaoAccount?.phoneNumber,
-        );
 
         if (context.mounted) {
 
