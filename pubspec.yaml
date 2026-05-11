@@ -1,5 +1,5 @@
 name: mobile_team_project
-description: "번호팅 - 익명 기반 대학생 매칭 & 채팅 앱"
+description: "번호팅 - 익명 기반 매칭 & 채팅 앱"
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -27,6 +27,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  # 카카오 로그인 버튼 이미지 (이미지 등록 후 주석 해제)
-  # assets:
-  #   - assets/images/kakao_login_medium_wide.png
+
+  assets:
+     - assets/images/kakao_login_medium_wide.png
