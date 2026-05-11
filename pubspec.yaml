@@ -12,7 +12,7 @@ dependencies:
 
   cupertino_icons: ^1.0.8
 
-  # 카카오 SDK (팀원 코드)
+  # 카카오 SDK
   kakao_flutter_sdk: ^2.0.0+1
   kakao_flutter_sdk_user: ^2.0.0+1
   kakao_flutter_sdk_share: ^2.0.0+1
