@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'screens/home_screen.dart';
-import 'screens/matching_home_screen.dart';
-import 'screens/profile_screen.dart';
+import 'package:mobile_team_project/front/screens/home_screen.dart';
+import 'package:mobile_team_project/front/screens/matching_home_screen.dart';
+import 'package:mobile_team_project/front/screens/profile_screen.dart';
+import 'package:mobile_team_project/backend/user_data/user_data.dart';
 
 class MainNavigation extends StatefulWidget {
-  const MainNavigation({super.key});
+  final KakaoUser user;
+  const MainNavigation({super.key, required this.user});
 
   @override
   State<MainNavigation> createState() => _MainNavigationState();
@@ -13,11 +15,17 @@ class MainNavigation extends StatefulWidget {
 class _MainNavigationState extends State<MainNavigation> {
   int _currentIndex = 0;
 
-  final List<Widget> _screens = const [
-    HomeScreen(),
-    MatchingHomeScreen(),
-    ProfileScreen(),
-  ];
+  late final List<Widget> _screens;
+
+  @override
+  void initState() {
+    super.initState();
+    _screens = [
+      HomeScreen(user: widget.user),
+      const MatchingHomeScreen(),
+      ProfileScreen(user: widget.user),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
