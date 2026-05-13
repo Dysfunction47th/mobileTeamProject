@@ -4,7 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:logger/logger.dart';
 import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import 'package:mobile_team_project/backend/config/securityData.dart';
 import 'package:mobile_team_project/backend/login/kakao_login.dart';
 import 'package:mobile_team_project/front/onboarding_screen.dart';
 
@@ -12,12 +14,18 @@ final logger = Logger();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // env 로드
+  await dotenv.load(fileName: "securityData.env");
+
   // 카카오 로그인 초기화
   KakaoSdk.init(
-    // 네이키브 키값 추후 보안을 위해 다른 방식으로 넣을 예정
-    nativeAppKey: 'de3a6f72605f417d72017860ecbb092f',
+    // env를 활용해 securityData.dart에서 네이키브 키값 가져옴
+    nativeAppKey: Env.KAKAO_API_KEY,
+
+
     // javaScriptAppKey: '${YOUR_JAVASCRIPT_APP_KEY}',
   );
+  print("3");
   runApp(const MyApp());
 }
 

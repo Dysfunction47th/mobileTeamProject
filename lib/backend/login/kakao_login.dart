@@ -6,6 +6,7 @@ import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
 
 import 'package:mobile_team_project/front/onboarding_screen.dart';
 import 'package:mobile_team_project/backend/user_data/user_data.dart';
+import 'package:mobile_team_project/backend/user_data/user_model.dart';
 
 
 final logger = Logger();
@@ -50,16 +51,20 @@ Future<void> loginWithKakao(BuildContext context) async {
             '전화번호=${user.kakaoAccount?.phoneNumber}'
         );
         final kakaoUser = createKakaoUser(user);
+
         // 유저정보 넘기기
         if (context.mounted) {
 
           if (!context.mounted) return;
 
+          final kakaoUser = createKakaoUser(user);
+
+          UserData.setUser(kakaoUser);
+
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) =>  OnboardingScreen(user: kakaoUser),
-            // OnboardingScreen로 이동
+              builder: (_) => const OnboardingScreen(),
             ),
           );
 
@@ -101,10 +106,14 @@ Future<void> loginWithKakao(BuildContext context) async {
         if (context.mounted) {
           if (!context.mounted) return;
 
+          final kakaoUser = createKakaoUser(user);
+
+          UserData.setUser(kakaoUser);
+
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => OnboardingScreen(user: kakaoUser),
+              builder: (_) => const OnboardingScreen(),
             ),
           );
 
@@ -134,10 +143,14 @@ Future<void> loginWithKakao(BuildContext context) async {
 
             if (!context.mounted) return;
 
+            final kakaoUser = createKakaoUser(user);
+
+            UserData.setUser(kakaoUser);
+
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) => OnboardingScreen(user: kakaoUser),
+                builder: (_) => const OnboardingScreen(),
               ),
             );
 
@@ -169,10 +182,14 @@ Future<void> loginWithKakao(BuildContext context) async {
 
           if (!context.mounted) return;
 
+          final kakaoUser = createKakaoUser(user);
+
+          UserData.setUser(kakaoUser);
+
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => OnboardingScreen(user: kakaoUser),
+              builder: (_) => const OnboardingScreen(),
             ),
           );
 

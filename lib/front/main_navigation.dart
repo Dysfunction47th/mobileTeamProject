@@ -5,8 +5,7 @@ import 'package:mobile_team_project/front/screens/profile_screen.dart';
 import 'package:mobile_team_project/backend/user_data/user_data.dart';
 
 class MainNavigation extends StatefulWidget {
-  final KakaoUser user;
-  const MainNavigation({super.key, required this.user});
+  const MainNavigation({super.key});
 
   @override
   State<MainNavigation> createState() => _MainNavigationState();
@@ -20,17 +19,21 @@ class _MainNavigationState extends State<MainNavigation> {
   @override
   void initState() {
     super.initState();
+
     _screens = [
-      HomeScreen(user: widget.user),
+      const HomeScreen(),
       const MatchingHomeScreen(),
-      ProfileScreen(user: widget.user),
+      const ProfileScreen(),
     ];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(index: _currentIndex, children: _screens),
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _screens,
+      ),
       bottomNavigationBar: _buildBottomNav(),
     );
   }
@@ -41,7 +44,8 @@ class _MainNavigationState extends State<MainNavigation> {
         color: Colors.white,
         border: Border(
           top: BorderSide(
-              color: const Color(0xFFFF6B9D).withOpacity(0.12)),
+            color: const Color(0xFFFF6B9D).withOpacity(0.12),
+          ),
         ),
         boxShadow: [
           BoxShadow(
@@ -103,7 +107,8 @@ class _NavItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color =
-        isActive ? const Color(0xFFFF6B9D) : const Color(0xFFCCCCCC);
+    isActive ? const Color(0xFFFF6B9D) : const Color(0xFFCCCCCC);
+
     return Expanded(
       child: GestureDetector(
         onTap: onTap,
@@ -113,25 +118,29 @@ class _NavItem extends StatelessWidget {
           children: [
             AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
               decoration: BoxDecoration(
                 color: isActive
                     ? const Color(0xFFFF6B9D).withOpacity(0.10)
                     : Colors.transparent,
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: Icon(isActive ? activeIcon : icon,
-                  color: color, size: 24),
+              child: Icon(
+                isActive ? activeIcon : icon,
+                color: color,
+                size: 24,
+              ),
             ),
             const SizedBox(height: 2),
-            Text(label,
-                style: TextStyle(
-                    fontSize: 10.5,
-                    color: color,
-                    fontWeight: isActive
-                        ? FontWeight.w700
-                        : FontWeight.w400)),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 10.5,
+                color: color,
+                fontWeight:
+                isActive ? FontWeight.w700 : FontWeight.w400,
+              ),
+            ),
           ],
         ),
       ),

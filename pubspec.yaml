@@ -17,7 +17,12 @@ dependencies:
   kakao_flutter_sdk_user: ^2.0.0+1
   kakao_flutter_sdk_share: ^2.0.0+1
   kakao_flutter_sdk_talk: ^2.0.0+1
+  # 로그
   logger: ^2.0.2
+  # env
+  flutter_dotenv: ^5.1.0
+  #메일
+  mailer: ^6.0.1
 
 dev_dependencies:
   flutter_test:
@@ -30,3 +35,4 @@ flutter:
 
   assets:
      - assets/images/kakao_login_medium_wide.png
+     - securityData.env
