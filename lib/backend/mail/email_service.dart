@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server/gmail.dart';
+import 'package:mobile_team_project/backend/config/securityData.dart';
 
 class EmailService {
   /// 인증 코드 생성
@@ -22,8 +23,8 @@ class EmailService {
     const senderEmail = 'geonuk1115@gmail.com';
 
     // Gmail 앱 비밀번호
-    const appPassword = 'dwvh topy epow acnw';
-
+    // const appPassword = 'dwvh topy epow acnw';
+    final String appPassword = Env.APP_PASSWORD;
     // 인증 코드 생성
     final verificationCode = generateCode();
 
