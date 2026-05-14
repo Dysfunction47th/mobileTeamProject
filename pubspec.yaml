@@ -11,6 +11,7 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
+  web_socket_channel: ^3.0.1
 
   # 카카오 SDK
   kakao_flutter_sdk: ^2.0.0+1
@@ -20,7 +21,7 @@ dependencies:
   # 로그
   logger: ^2.0.2
   # env
-  flutter_dotenv: ^5.1.0
+  flutter_dotenv: ^6.0.1
   #메일
   mailer: ^6.0.1
 
