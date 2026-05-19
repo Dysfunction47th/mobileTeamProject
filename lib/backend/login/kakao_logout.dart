@@ -1,4 +1,6 @@
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
@@ -18,6 +20,13 @@ Future<void> logoutWithKakao(BuildContext context) async {
     logger.i('로그아웃 실패, SDK에서 토큰 폐기 $error');
 
   }
+
+  // try {
+  //   await UserApi.instance.unlink();
+  //   logger.i('연결 해제 성공, SDK에서 토큰 폐기');
+  // } catch (error) {
+  //   logger.i('연결 해제 실패 $error');
+  // }
 
   if (!context.mounted) return;
 
