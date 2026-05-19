@@ -1,26 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_team_project/front/onboarding_screen2.dart';
-import 'package:mobile_team_project/backend/user_data/user_data.dart';
+import 'package:mobile_team_project/front/screens/profile_screen.dart';
 
 class SchoolCheckOk extends StatelessWidget {
   const SchoolCheckOk({super.key});
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('인증 완료')),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (_) => const OnboardingScreen2(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              '✅ 학교 인증이 완료되었습니다!',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
               ),
-            );
-          },
-          child: const Text('다음으로 이동'),
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: () {
+                // 인증 완료 후 프로필 화면으로 이동 (스택 유지)
+                Navigator.pop(context);
+              },
+              child: const Text('확인'),
+            ),
+          ],
         ),
       ),
     );
