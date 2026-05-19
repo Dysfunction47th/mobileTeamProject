@@ -71,40 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
       home: const LoginScreen(),
     );
   }
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //     appBar: AppBar(
-  //       backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-  //       title: Text(widget.title),
-  //     ),
-  //     body: Center(
-  //       child: Column(
-  //         mainAxisAlignment: MainAxisAlignment.center,
-  //         children: [
-  //
-  //           const Text('You have pushed the button this many times:'),
-  //
-  //
-  //           const SizedBox(height: 30),
-  //
-  //           ElevatedButton(
-  //             // 로그인 버튼
-  //             onPressed: () async {
-  //               await loginWithKakao(context);
-  //               // loginWithKakao() 함수가 끝날 때까지 기다렸다가 다음 코드를 실행
-  //             },
-  //             child: const Text('카카오 로그인'),
-  //           ),
-  //
-  //
-  //
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
 }
-
 
 
 //이거 어디에다가 넣지 simplechatapp을 만드시라는 건가용?
