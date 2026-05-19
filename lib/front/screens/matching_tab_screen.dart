@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_team_project/backend/user_data/user_data.dart';
+import 'package:mobile_team_project/front/screens/chat_screen.dart';
 
 class MatchingTabScreen extends StatefulWidget {
   const MatchingTabScreen({super.key});
@@ -79,7 +81,22 @@ class _MatchingTabScreenState extends State<MatchingTabScreen> {
       );
       return;
     }
+
+    final user = UserData.user;
+    if (user == null) return;
+
     setState(() => _isMatching = true);
+
+    // 소켓 서버 연결 및 채팅 화면으로 이동
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => SimpleChatApp(user: user),
+      ),
+    ).then((_) {
+      // 채팅 화면에서 돌아오면 매칭 상태 초기화
+      setState(() => _isMatching = false);
+    });
   }
 
   void _onMatchCancel() {
@@ -134,7 +151,7 @@ class _MatchingTabScreenState extends State<MatchingTabScreen> {
     );
   }
 
-  // ── 성별 선택
+  // 성별 선택
   Widget _buildGenderSelector() {
     return Row(
       children: ['남성', '여성'].asMap().entries.map((e) {
@@ -163,9 +180,8 @@ class _MatchingTabScreenState extends State<MatchingTabScreen> {
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: isSelected
-                      ? Colors.white
-                      : const Color(0xFF888888),
+                  color:
+                      isSelected ? Colors.white : const Color(0xFF888888),
                 ),
               ),
             ),
@@ -175,7 +191,7 @@ class _MatchingTabScreenState extends State<MatchingTabScreen> {
     );
   }
 
-  // ── 학년 선택 (복수 선택, 4개 전부 선택 시 전체학년)
+  // 학년 선택 (복수 선택, 4개 전부 선택 시 전체학년)
   Widget _buildYearSelector() {
     return Row(
       children: _years.asMap().entries.map((e) {
@@ -230,7 +246,7 @@ class _MatchingTabScreenState extends State<MatchingTabScreen> {
     );
   }
 
-  // ── 학과 선택 드롭다운
+  // 학과 선택 드롭다운
   Widget _buildDeptSelector() {
     return Column(
       children: [
@@ -312,8 +328,7 @@ class _MatchingTabScreenState extends State<MatchingTabScreen> {
                       border: index < _departments.length - 1
                           ? const Border(
                               bottom: BorderSide(
-                                  color: Color(0xFFF5F5F5),
-                                  width: 0.5))
+                                  color: Color(0xFFF5F5F5), width: 0.5))
                           : null,
                     ),
                     child: Row(
@@ -346,7 +361,7 @@ class _MatchingTabScreenState extends State<MatchingTabScreen> {
     );
   }
 
-  // ── 이성 매칭 안내 배너
+  // 이성 매칭 안내 배너
   Widget _buildNotice() {
     return Container(
       width: double.infinity,
@@ -374,13 +389,13 @@ class _MatchingTabScreenState extends State<MatchingTabScreen> {
     );
   }
 
-  // ── 매칭 버튼 (매칭 중일 때 로딩바 + 취소 버튼)
+  // 매칭 버튼 (매칭 중일 때 로딩바 + 취소 버튼)
   Widget _buildMatchButton() {
     if (_isMatching) {
       return Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(
-            horizontal: 16, vertical: 14),
+        padding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(14),
@@ -388,7 +403,6 @@ class _MatchingTabScreenState extends State<MatchingTabScreen> {
         ),
         child: Row(
           children: [
-            // 로딩바
             const SizedBox(
               width: 20,
               height: 20,
@@ -398,7 +412,6 @@ class _MatchingTabScreenState extends State<MatchingTabScreen> {
               ),
             ),
             const SizedBox(width: 12),
-            // 매칭 중 텍스트
             Expanded(
               child: Text(
                 '${_myGender == '남성' ? '여성' : '남성'} / $_yearText / $_selectedDept 매칭 중...',
@@ -411,7 +424,6 @@ class _MatchingTabScreenState extends State<MatchingTabScreen> {
               ),
             ),
             const SizedBox(width: 8),
-            // 매칭 취소 버튼
             GestureDetector(
               onTap: _onMatchCancel,
               child: Container(
@@ -422,7 +434,7 @@ class _MatchingTabScreenState extends State<MatchingTabScreen> {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Text(
-                  '매칭 취소',
+                  '취소',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
@@ -436,7 +448,6 @@ class _MatchingTabScreenState extends State<MatchingTabScreen> {
       );
     }
 
-    // 매칭 시작 버튼
     return SizedBox(
       width: double.infinity,
       height: 52,
