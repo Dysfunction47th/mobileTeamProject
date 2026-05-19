@@ -1,5 +1,6 @@
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart';
+import 'package:mobile_team_project/backend/login/kakao_login.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class SocketManager {
@@ -44,6 +45,7 @@ class SocketManager {
       _channel!.sink.add(msg);
     } else {
       print("⚠️ 연결된 소켓이 없습니다.");
+      logger.i('⚠️ 연결된 소켓이 없습니다.');
     }
   }
 

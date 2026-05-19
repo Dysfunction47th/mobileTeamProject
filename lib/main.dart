@@ -8,6 +8,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mobile_team_project/backend/config/securityData.dart';
 import 'package:mobile_team_project/backend/login/kakao_login.dart';
 import 'package:mobile_team_project/front/onboarding_screen.dart';
+import 'package:mobile_team_project/front/screens/login_screen.dart';
+
+
 
 final logger = Logger();
 
@@ -22,9 +25,9 @@ Future<void> main() async {
     nativeAppKey: Env.KAKAO_API_KEY,
 
 
-    // javaScriptAppKey: '${YOUR_JAVASCRIPT_APP_KEY}',
+    // javaScriptAppKey: '',
   );
-  print("3");
+
   runApp(const MyApp());
 }
 
@@ -53,59 +56,55 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-
-
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+
+      title: '번호팅',
+
+      theme: ThemeData(
+        fontFamily: 'Pretendard', // 사용 안 하면 삭제 가능
+        scaffoldBackgroundColor: Colors.white,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
 
-            const Text('You have pushed the button this many times:'),
-
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-
-            const SizedBox(height: 30),
-
-            ElevatedButton(
-              // 로그인 버튼
-              onPressed: () async {
-                await loginWithKakao(context);
-                // loginWithKakao() 함수가 끝날 때까지 기다렸다가 다음 코드를 실행
-              },
-              child: const Text('카카오 로그인'),
-            ),
-
-
-
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        child: const Icon(Icons.add),
-      ),
+      home: const LoginScreen(),
     );
   }
+  // Widget build(BuildContext context) {
+  //   return Scaffold(
+  //     appBar: AppBar(
+  //       backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+  //       title: Text(widget.title),
+  //     ),
+  //     body: Center(
+  //       child: Column(
+  //         mainAxisAlignment: MainAxisAlignment.center,
+  //         children: [
+  //
+  //           const Text('You have pushed the button this many times:'),
+  //
+  //
+  //           const SizedBox(height: 30),
+  //
+  //           ElevatedButton(
+  //             // 로그인 버튼
+  //             onPressed: () async {
+  //               await loginWithKakao(context);
+  //               // loginWithKakao() 함수가 끝날 때까지 기다렸다가 다음 코드를 실행
+  //             },
+  //             child: const Text('카카오 로그인'),
+  //           ),
+  //
+  //
+  //
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 }
+
 
 
 //이거 어디에다가 넣지 simplechatapp을 만드시라는 건가용?

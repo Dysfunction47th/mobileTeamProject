@@ -4,7 +4,9 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:logger/logger.dart';
 import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
 
-import 'package:mobile_team_project/front/onboarding_screen.dart';
+// import 'package:mobile_team_project/front/onboarding_screen.dart';
+import 'package:mobile_team_project/front/main_navigation.dart';
+
 import 'package:mobile_team_project/backend/user_data/user_data.dart';
 import 'package:mobile_team_project/backend/user_data/user_model.dart';
 
@@ -61,11 +63,12 @@ Future<void> loginWithKakao(BuildContext context) async {
 
           UserData.setUser(kakaoUser);
 
-          Navigator.push(
+          Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-              builder: (_) => const OnboardingScreen(),
+              builder: (_) => const MainNavigation(),
             ),
+                (route) => false,
           );
 
         }
@@ -110,11 +113,12 @@ Future<void> loginWithKakao(BuildContext context) async {
 
           UserData.setUser(kakaoUser);
 
-          Navigator.push(
+          Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-              builder: (_) => const OnboardingScreen(),
+              builder: (_) => const MainNavigation(),
             ),
+                (route) => false,
           );
 
         }
@@ -147,11 +151,12 @@ Future<void> loginWithKakao(BuildContext context) async {
 
             UserData.setUser(kakaoUser);
 
-            Navigator.push(
+            Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                builder: (_) => const OnboardingScreen(),
+                builder: (_) => const MainNavigation(),
               ),
+                  (route) => false,
             );
 
           }
@@ -186,11 +191,12 @@ Future<void> loginWithKakao(BuildContext context) async {
 
           UserData.setUser(kakaoUser);
 
-          Navigator.push(
+          Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-              builder: (_) => const OnboardingScreen(),
+              builder: (_) => const MainNavigation(),
             ),
+                (route) => false,
           );
 
         }

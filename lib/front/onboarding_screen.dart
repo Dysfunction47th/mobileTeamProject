@@ -5,9 +5,29 @@ import 'package:mobile_team_project/front/schoolCheck.dart';
 import 'package:mobile_team_project/front/screens/chat_screen.dart';
 import 'package:mobile_team_project/main.dart';
 
+import 'package:mobile_team_project/front/screens/chat_list_screen.dart';
+import 'package:mobile_team_project/front/screens/chat_room_screen.dart';
+import 'package:mobile_team_project/front/screens/home_screen.dart';
+import 'package:mobile_team_project/front/screens/login_screen.dart';
+import 'package:mobile_team_project/front/screens/matching_home_screen.dart';
+import 'package:mobile_team_project/front/screens/matching_tab_screen.dart';
+import 'package:mobile_team_project/front/screens/profile_screen.dart';
+import 'package:mobile_team_project/front/screens/chat_screen.dart';
+
+import 'main_navigation.dart';
+
+
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
 
+  void _go(BuildContext context, Widget screen) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => screen, // 전달된 화면으로 이동
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     final user = UserData.user;
@@ -69,6 +89,70 @@ class OnboardingScreen extends StatelessWidget {
                 );
               },
               child: const Text('1:1 랜덤 채팅 시작하기'),
+            ),
+            // ===== 화면 이동 버튼들 =====
+
+            // 채팅 리스트 화면 이동
+            ElevatedButton(
+              onPressed: () =>
+                  _go(context, const ChatListScreen()),
+              child: const Text("Chat List Screen"),
+            ),
+
+            // 채팅방 화면 (현재 required parameter 때문에 주석 처리됨)
+            // ElevatedButton(
+            //   onPressed: () =>
+            //       _go(context, const ChatRoomScreen()),
+            //   child: const Text("Chat Room Screen"),
+            // ),
+
+            // 홈 화면 이동
+            ElevatedButton(
+              onPressed: () =>
+                  _go(context, const HomeScreen()),
+              child: const Text("Home Screen"),
+            ),
+
+            // // 홈 화면 이동
+            // ElevatedButton(
+            //   onPressed: () =>
+            //       _go(context, const SimpleChatApp()),
+            //   child: const Text("Home Screen"),
+            // ),
+
+            // 로그인 화면 이동
+            ElevatedButton(
+              onPressed: () =>
+                  _go(context, const LoginScreen()),
+              child: const Text("Login Screen"),
+            ),
+
+            // 매칭 홈 화면 이동
+            ElevatedButton(
+              onPressed: () =>
+                  _go(context, const MatchingHomeScreen()),
+              child: const Text("Matching Home Screen"),
+            ),
+
+            // 매칭 탭 화면 이동
+            ElevatedButton(
+              onPressed: () =>
+                  _go(context, const MatchingTabScreen()),
+              child: const Text("Matching Tab Screen"),
+            ),
+
+            // 프로필 화면 이동
+            ElevatedButton(
+              onPressed: () =>
+                  _go(context, const ProfileScreen()),
+              child: const Text("Profile Screen"),
+            ),
+
+            // 메인 네비게이션 화면 이동 (앱 구조 핵심 화면일 가능성 큼)
+            ElevatedButton(
+              onPressed: () =>
+                  _go(context, const MainNavigation()),
+              child: const Text("Main Navigation"),
             ),
           ],
         ),
