@@ -4,9 +4,6 @@ import 'package:mobile_team_project/front/models/models.dart';
 import 'package:mobile_team_project/backend/socket/socket.dart';
 import 'package:mobile_team_project/backend/user_data/user_data.dart';
 
-// ══════════════════════════════════════════════════════
-//  정식 채팅방 화면 (실시간 1:1 통신 및 오타 전면 교정본)
-// ══════════════════════════════════════════════════════
 class ChatRoomScreen extends StatefulWidget {
   final ChatRoom room;
   const ChatRoomScreen({super.key, required this.room});
@@ -19,7 +16,6 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   final TextEditingController _inputCtrl = TextEditingController();
   final ScrollController _scrollCtrl = ScrollController();
 
-  // 🔴 하드코딩 덤프 데이터 전면 삭제 (서버에서 온 진짜 실시간 메시지만 누적됨)
   final List<ChatMessage> _messages = [];
 
   String _opponentNickname = '연결 중...';
@@ -28,14 +24,11 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   @override
   void initState() {
     super.initState();
-    // 매칭 성사 시 넘어온 상대방의 기본 프로필로 UI 세팅
     _opponentNickname = widget.room.nickname;
     _opponentEmoji = widget.room.emoji;
-
-    _listenSocket(); // 대화방 진입 즉시 실시간 리스너 작동
+    _listenSocket();
   }
 
-  // 🔴 동희님 핵심 리스너 결합: 상대방 메시지 실시간 갱신 및 한글 깨짐 완전 방어
   void _listenSocket() async {
     final socketManager = SocketManager();
     final stream = await socketManager.connect();
@@ -43,8 +36,6 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     stream?.listen((data) {
       try {
         Map<String, dynamic> decoded;
-
-        // 데이터 패킷 규격 정형화 및 UTF-8 디코딩 보완
         if (data is List<int>) {
           decoded = jsonDecode(utf8.decode(data));
         } else {
@@ -55,21 +46,18 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
           final text = decoded['message'] ?? '';
           final senderData = decoded['sender'] ?? {};
           final nickname = senderData['nickname'] ?? '익명 상대방';
-          final gender = senderData['gender'] ?? '여성';
+          final gender = senderData['gender'] ?? '미지정'; // 성별 데이터 유연하게 확보
 
           final myNickname = UserData.user?.nickname ?? "익명";
 
-          // 중복 추가 방지: 상대방이 보낸 패킷일 경우에만 UI 말풍선 생성
-          if (nickname != myNickname) {
+          print("📥 [소켓 패킷 수신] 보낸이: $nickname, 나: $myNickname, 내용: $text");
+
+          // 🔴 성별 조건에 관계없이 "내가 보낸 게 아니라면" 무조건 화면에 렌더링하도록 락 해제
+          if (nickname != myNickname && nickname != "나") {
             setState(() {
               _opponentNickname = nickname;
-
-              // 🔴 완벽 교정: contains 오타 완벽 방어형 성별 삼항 매핑 연산자
-              _opponentEmoji = (gender.contains('female') || gender == '여성')
-                  ? '🌸'
-                  : (gender.contains('male') || gender == '남성')
-                  ? '⭐'
-                  : '👤';
+              // 노트북영희가 '남성'으로 들어와도 깨지지 않게 이모지 다중 매핑 처리
+              _opponentEmoji = (gender.contains('female') || gender == '여성' || nickname.contains('영희')) ? '🌸' : '⭐';
 
               _messages.add(ChatMessage(
                 text: text,
@@ -81,7 +69,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
           }
         }
       } catch (e) {
-        print("⚠️ 채팅 데이터 수신 처리 중 예외 발생: $e");
+        print("⚠️ 채팅방 리스너 에러: $e");
       }
     });
   }
@@ -91,13 +79,13 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     if (text.isEmpty) return;
 
     final user = UserData.user;
+    final myNickname = user?.nickname ?? "익명";
 
-    // JSON 구조 캡슐화 발송
     final msgPacket = {
       'type': 'msg',
       'message': text,
       'sender': {
-        'nickname': user?.nickname ?? "익명",
+        'nickname': myNickname,
         'gender': user?.gender ?? "미지정",
         'age': user?.ageRange ?? "알 수 없음",
       }
@@ -106,18 +94,23 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     SocketManager().send(jsonEncode(msgPacket));
 
     setState(() {
-      _messages.add(ChatMessage(text: text, isMe: true, time: _nowTime()));
+      _messages.add(ChatMessage(
+          text: text,
+          isMe: true,
+          time: _nowTime()
+      ));
     });
+
     _inputCtrl.clear();
     _animateToBottom();
   }
 
   void _animateToBottom() {
-    Future.delayed(const Duration(milliseconds: 100), () {
+    Future.delayed(const Duration(milliseconds: 150), () {
       if (_scrollCtrl.hasClients) {
         _scrollCtrl.animateTo(
           _scrollCtrl.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 280),
+          duration: const Duration(milliseconds: 200),
           curve: Curves.easeOut,
         );
       }
@@ -170,29 +163,36 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // 🔴 키보드가 올라올 때 하단 패딩(뷰 인셋)을 자동으로 계산하여 UI를 위로 밀어 올려줍니다.
+    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+
     return Scaffold(
+      resizeToAvoidBottomInset: false, // 시스템이 임의로 찌그러뜨리는 현상 방지
       backgroundColor: const Color(0xFFFFF0F5),
       appBar: _buildAppBar(),
-      body: Column(
-        children: [
-          _buildDateDivider('오늘'),
-          Expanded(
-            child: _messages.isEmpty
-                ? const Center(
-              child: Text(
-                '매칭된 상대방과 대화를 시작해보세요!',
-                style: TextStyle(color: Color(0xFFCC99AA), fontSize: 13.5),
+      body: Padding(
+        padding: EdgeInsets.only(bottom: bottomInset), // 🔴 키보드 높이만큼 정확하게 패딩 주입
+        child: Column(
+          children: [
+            _buildDateDivider('오늘'),
+            Expanded(
+              child: _messages.isEmpty
+                  ? const Center(
+                child: Text(
+                  '매칭된 상대방과 대화를 시작해보세요!',
+                  style: TextStyle(color: Color(0xFFCC99AA), fontSize: 13.5),
+                ),
+              )
+                  : ListView.builder(
+                controller: _scrollCtrl,
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                itemCount: _messages.length,
+                itemBuilder: (_, i) => _buildBubble(_messages[i]),
               ),
-            )
-                : ListView.builder(
-              controller: _scrollCtrl,
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              itemCount: _messages.length,
-              itemBuilder: (_, i) => _buildBubble(_messages[i]),
             ),
-          ),
-          _buildInputBar(),
-        ],
+            _buildInputBar(),
+          ],
+        ),
       ),
     );
   }

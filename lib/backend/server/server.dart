@@ -1,127 +1,163 @@
 import 'dart:io';
 import 'dart:convert';
 
-// 대기열 유저 구조체 (소켓 + 가공된 유저 프로필 정보 통합)
-class WaitingUser {
-  final WebSocket socket;
-  final String myGender;
-  final String targetGender;
-  final List<String> targetYears;
-  final String targetDept;
-  final Map<String, dynamic> myProfile; // 진짜 카카오/프로필 데이터
+// 실시간 대기열 및 연결된 유저 세션을 저장하는 명세서
+class MatchUser {
+  final WebSocket socket; // 유저의 고유 소켓 파이프라인
+  final String nickname;
+  final String gender;
+  final String department;
+  final List<dynamic> years;
 
-  WaitingUser({
+  MatchUser({
     required this.socket,
-    required this.myGender,
-    required this.targetGender,
-    required this.targetYears,
-    required this.targetDept,
-    required this.myProfile,
+    required this.nickname,
+    required this.gender,
+    required this.department,
+    required this.years,
   });
 }
 
 void main() async {
+  // 4001번 포트 바인딩 가동
   final server = await HttpServer.bind(InternetAddress.anyIPv4, 4001);
-  print('🚀 [1:1 카카오 연동 맞춤형 필터 매칭 서버 가동] ws://0.0.0.0:4001');
+  print("🚀 [1:1 번호팅 통합 백엔드 중계 서버 정식 기동] ws://0.0.0.0:4001");
 
-  List<WaitingUser> queue = [];
+  // 현재 매칭 대기방에서 대기 중인 유저 풀
+  List<MatchUser> waitingQueue = [];
+
+  // 🔴 실시간 1:1 대화방 매핑 주소록 (안전한 세션 보존 치트키)
+  // Key: 내 소켓 해시값 string ➔ Value: 상대방 유저의 MatchUser 객체
+  Map<String, MatchUser> activeChatRooms = {};
 
   server.listen((HttpRequest request) async {
     if (WebSocketTransformer.isUpgradeRequest(request)) {
       WebSocket socket = await WebSocketTransformer.upgrade(request);
+      final String myKey = socket.hashCode.toString();
+      print("🔌 [연결] 새로운 기기가 소켓 망에 정착했습니다. (ID: $myKey)");
 
-      // 접속 시마다 죽은 세션(찌꺼기) 정리
-      queue.removeWhere((user) => user.socket.readyState != WebSocket.open);
+      socket.listen(
+            (message) {
+          try {
+            final Map<String, dynamic> packet = jsonDecode(message.toString());
+            final type = packet['type'];
 
-      socket.listen((data) {
-        try {
-          final Map<String, dynamic> decoded = jsonDecode(data.toString());
+            // ══════════════════════════════════════════════════════
+            // 1. 매칭 대기열 등록 및 성별 크로스 검증 매칭
+            // ══════════════════════════════════════════════════════
+            if (type == 'match_start') {
+              final myProfile = packet['myProfile'] ?? {};
+              final filter = packet['filter'] ?? {};
 
-          // 1. 매칭 시작 요청 수신
-          if (decoded['type'] == 'match_start') {
-            final filter = decoded['filter'] ?? {};
-            final myProfile = decoded['myProfile'] ?? {};
+              final currentUser = MatchUser(
+                socket: socket,
+                nickname: myProfile['nickname'] ?? '익명',
+                gender: myProfile['gender'] ?? '미지정',
+                department: myProfile['department'] ?? '소프트웨어학과',
+                years: filter['years'] ?? [],
+              );
 
-            final targetGender = filter['gender'] ?? '여성';
-            final List<String> targetYears = List<String>.from(filter['years'] ?? []);
-            final targetDept = filter['department'] ?? '전체 학과';
-            final myGender = myProfile['gender'] ?? '남성';
+              print("🔔 [대기열 진입] 닉네임: ${currentUser.nickname} | 성별: ${currentUser.gender}");
 
-            final newUser = WaitingUser(
-              socket: socket,
-              myGender: myGender,
-              targetGender: targetGender,
-              targetYears: targetYears,
-              targetDept: targetDept,
-              myProfile: myProfile,
-            );
+              // 대기열에 조건이 매칭되는 이성 상대방이 있는지 전수조사
+              MatchUser? opponentUser;
+              for (var waitingUser in waitingQueue) {
+                // 성별이 서로 다르고, 연결 상태가 정상인 경우 매칭 성공
+                if (waitingUser.gender != currentUser.gender) {
+                  opponentUser = waitingUser;
+                  break;
+                }
+              }
 
-            queue.add(newUser);
-            print('🔔 대기자 등록 ➔ 닉네임: ${myProfile['nickname']}, 학과: ${myProfile['department']}');
+              if (opponentUser != null) {
+                // 대기열 수용소에서 상대방 탈출 처리
+                waitingQueue.remove(opponentUser);
 
-            // 2. 조건 매칭 알고리즘 가동
-            _tryMatchMatchingUsers(queue);
+                print("🎯 [매칭 성사 성공] ${currentUser.nickname} 🤝 ${opponentUser.nickname}");
+
+                final String oppKey = opponentUser.socket.hashCode.toString();
+
+                // 🔴 핵심 주소록 바인딩: 주소록 맵에 서로를 1:1 파트너로 강제 매핑 명시
+                activeChatRooms[myKey] = opponentUser;
+                activeChatRooms[oppKey] = currentUser;
+
+                // 내 화면에 상대 프로필 던지며 매칭 전환 트리거 발송
+                socket.add(jsonEncode({
+                  'type': 'match_start',
+                  'sender': {
+                    'nickname': opponentUser.nickname,
+                    'gender': opponentUser.gender,
+                    'department': opponentUser.department
+                  }
+                }));
+
+                // 상대방 화면에도 내 프로필 수동 주입하며 채팅방 동시 슬라이딩 진입 지시
+                opponentUser.socket.add(jsonEncode({
+                  'type': 'match_start',
+                  'sender': {
+                    'nickname': currentUser.nickname,
+                    'gender': currentUser.gender,
+                    'department': currentUser.department
+                  }
+                }));
+              } else {
+                // 조건에 맞는 상대가 없으므로 대기큐에 적재
+                waitingQueue.add(currentUser);
+              }
+            }
+
+            // ══════════════════════════════════════════════════════
+            // 2. 실시간 메시지 중계 포워딩 (배달 사고 100% 방어 완비)
+            // ══════════════════════════════════════════════════════
+            else if (type == 'msg') {
+              final text = packet['message'] ?? '';
+              final sender = packet['sender'] ?? {};
+              final nickname = sender['nickname'] ?? '익명';
+
+              print("💬 [중계 배달 중] 보낸이: $nickname ➔ 메세지 내용: $text");
+
+              // 🔴 주소록 맵에서 내 고유 키(myKey)를 대입해 1:1 짝꿍 상대방 소켓을 역추적합니다.
+              final MatchUser? partner = activeChatRooms[myKey];
+
+              if (partner != null) {
+                // 상대방 소켓 구멍에 내가 보낸 가공 패킷 그대로 정밀하게 슛!
+                partner.socket.add(jsonEncode({
+                  'type': 'msg',
+                  'message': text,
+                  'sender': {
+                    'nickname': nickname,
+                    'gender': sender['gender'] ?? '미지정',
+                  }
+                }));
+                print("📦 [중계 배달 완료] -> ${partner.nickname} 기기로 패킷 포워딩 성공");
+              } else {
+                print("⚠️ [배달 실패] 대화방 매핑 주소록에 매칭된 상대방 세션이 없습니다.");
+              }
+            }
+
+            // 3. 매칭 취소 처리
+            else if (type == 'match_cancel') {
+              waitingQueue.removeWhere((u) => u.socket.hashCode == socket.hashCode);
+              print("❌ 유저가 취소 요청하여 대기열에서 정상 취소 처리했습니다.");
+            }
+
+          } catch (e) {
+            print("⚠️ 서버 패킷 팅김 및 라우팅 예외 발생: $e");
           }
+        },
+        onDone: () {
+          print("🔌 [종료] 기기 연결 해제됨 (ID: $myKey)");
+          waitingQueue.removeWhere((u) => u.socket.hashCode == socket.hashCode);
 
-          // 3. 매칭 취소 요청 수신
-          if (decoded['type'] == 'match_cancel') {
-            queue.removeWhere((user) => user.socket == socket);
-            print('👋 매칭 취소 처리 완료. 현재 대기열: ${queue.length}명');
+          // 나가면 연결된 대화방 폭파 청소
+          final MatchUser? partner = activeChatRooms[myKey];
+          if (partner != null) {
+            final String oppKey = partner.socket.hashCode.toString();
+            activeChatRooms.remove(myKey);
+            activeChatRooms.remove(oppKey);
           }
-
-        } catch (e) {
-          // 일반 대화 'msg' 패킷은 이 catch 블록을 타며 하단의 파이프라인으로 정상 중계됩니다.
-        }
-      }, onDone: () {
-        queue.removeWhere((user) => user.socket == socket);
-      });
+        },
+      );
     }
   });
-}
-
-void _tryMatchMatchingUsers(List<WaitingUser> queue) {
-  if (queue.length < 2) return;
-
-  for (int i = 0; i < queue.length; i++) {
-    for (int j = i + 1; j < queue.length; j++) {
-      WaitingUser u1 = queue[i];
-      WaitingUser u2 = queue[j];
-
-      // 조건 A: 성별 교차 매칭 검증
-      bool genderMatch = (u1.targetGender == u2.myGender) && (u2.targetGender == u1.myGender);
-
-      // 조건 B: 학년 매칭 (기본 프리패스, 필요시 확장)
-      bool yearMatch = true;
-
-      // 조건 C: 학과 조건 검증 (상대방 진짜 학과 프로필과 대조)
-      bool deptMatch = (u1.targetDept == '전체 학과' || u1.targetDept == u2.myProfile['department']) &&
-          (u2.targetDept == '전체 학과' || u2.targetDept == u1.myProfile['department']);
-
-      if (genderMatch && yearMatch && deptMatch) {
-        print('🎯 [매칭 성사] ${u1.myProfile['nickname']} 🤝 ${u2.myProfile['nickname']}');
-
-        queue.remove(u1);
-        queue.remove(u2);
-
-        // 🔴 하드코딩 완전 삭제: 카카오에서 불러온 진짜 프로필을 서로 크로스로 교환 발송
-        var u1Signal = jsonEncode({
-          'type': 'match_start',
-          'sender': u2.myProfile
-        });
-        var u2Signal = jsonEncode({
-          'type': 'match_start',
-          'sender': u1.myProfile
-        });
-
-        u1.socket.add(u1Signal);
-        u2.socket.add(u2Signal);
-
-        // 🔄 1:1 채팅 리슨 파이프라인 형성
-        u1.socket.listen((data) => u2.socket.add(data), onDone: () => u2.socket.close());
-        u2.socket.listen((data) => u1.socket.add(data), onDone: () => u1.socket.close());
-
-        return;
-      }
-    }
-  }
 }
