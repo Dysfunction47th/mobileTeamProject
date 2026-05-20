@@ -295,7 +295,7 @@ class _MatchingTabScreenState extends State<MatchingTabScreen> {
         children: [
           const Icon(Icons.favorite_rounded, color: Color(0xFFFF6B9D), size: 14),
           const SizedBox(width: 6),
-          Text('${_myGender == '남성' ? '여성' : '남성'}과만 매칭됩니다', style: const TextStyle(fontSize: 12.5, color: Color(0xFFFF6B9D), fontWeight: FontWeight.w600)),
+          Text('${_myGender == '남성' ? '여성' : '남성'} / $_yearText / $_selectedDept 로 매칭됩니다', style: const TextStyle(fontSize: 12.5, color: Color(0xFFFF6B9D), fontWeight: FontWeight.w600)),
         ],
       ),
     );
