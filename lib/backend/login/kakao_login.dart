@@ -207,5 +207,6 @@ Future<void> loginWithKakao(BuildContext context) async {
   } catch (e, stack) {
     logger.e("⚠️ 로그인 중 예외 발생: $e\n$stack");
   }
+
 }
 

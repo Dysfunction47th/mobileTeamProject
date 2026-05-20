@@ -23,7 +23,7 @@ class SchoolCheckOk extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // 인증 완료 후 프로필 화면으로 이동 (스택 유지)
-                Navigator.pop(context);
+                Navigator.pop(context,true);
               },
               child: const Text('확인'),
             ),

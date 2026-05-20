@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile_team_project/backend/login/kakao_logout.dart';
 import 'package:mobile_team_project/backend/user_data/user_data.dart';
 import 'package:mobile_team_project/backend/user_data/user_model.dart';
-import 'package:mobile_team_project/front/schoolCheck.dart';
+import 'package:mobile_team_project/front/screens/schoolCheck.dart';
 
 // 프로필 화면 (사용자 정보 확인 + 수정 + 로그아웃)
 class ProfileScreen extends StatefulWidget {
@@ -454,14 +454,58 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // 학교 인증 버튼
+  // // 학교 인증 버튼
+  // Widget _schoolCheckButton() {
+  //   return GestureDetector(
+  //     onTap: () {
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(builder: (_) => const SchoolCheck()),
+  //       );
+  //     },
+  //     child: Container(
+  //       width: double.infinity,
+  //       padding: const EdgeInsets.symmetric(vertical: 14),
+  //       decoration: BoxDecoration(
+  //         color: const Color(0xFFFFF0F5),
+  //         borderRadius: BorderRadius.circular(14),
+  //         border: Border.all(color: const Color(0xFFFFCCDD)),
+  //       ),
+  //       child: const Row(
+  //         mainAxisAlignment: MainAxisAlignment.center,
+  //         children: [
+  //           Icon(Icons.school_rounded,
+  //               color: Color(0xFFFF6B9D), size: 18),
+  //           SizedBox(width: 8),
+  //           Text('학교 이메일 인증',
+  //               style: TextStyle(
+  //                   fontSize: 14,
+  //                   fontWeight: FontWeight.w600,
+  //                   color: Color(0xFFFF6B9D))),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
+// 학교 인증 버튼
+  bool isVerified = false;
+
   Widget _schoolCheckButton() {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
+      onTap: () async {
+        final result = await Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => const SchoolCheck()),
+          MaterialPageRoute(
+            builder: (_) => const SchoolCheck(),
+          ),
         );
+
+        // 인증 완료 후 true 반환되면 상태 변경
+        if (result == true) {
+          setState(() {
+            isVerified = true;
+          });
+        }
       },
       child: Container(
         width: double.infinity,
@@ -471,23 +515,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
           borderRadius: BorderRadius.circular(14),
           border: Border.all(color: const Color(0xFFFFCCDD)),
         ),
-        child: const Row(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.school_rounded,
-                color: Color(0xFFFF6B9D), size: 18),
-            SizedBox(width: 8),
-            Text('학교 이메일 인증',
-                style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFFFF6B9D))),
+            Icon(
+              Icons.school_rounded,
+              color: const Color(0xFFFF6B9D),
+              size: 18,
+            ),
+            const SizedBox(width: 8),
+
+            // 인증 여부에 따라 텍스트 변경
+            Text(
+              isVerified ? '인증 확인' : '학교 이메일 인증',
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFFFF6B9D),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
-
   BoxDecoration _tileDeco() => BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),

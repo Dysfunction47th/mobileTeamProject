@@ -9,6 +9,7 @@ import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
 import 'package:mobile_team_project/front/screens/login_screen.dart';
 import 'package:mobile_team_project/backend/user_data/user_data.dart';
 
+final logger = Logger();
 
 Future<void> logoutWithKakao(BuildContext context) async {
   try {

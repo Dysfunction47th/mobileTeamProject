@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 
-import 'package:mobile_team_project/front/schoolCheckOk.dart';
+import 'package:mobile_team_project/front/screens/schoolCheckOk.dart';
 import 'package:mobile_team_project/backend/mail/email_service.dart';
 
 class SchoolCheck extends StatefulWidget {
@@ -70,15 +70,20 @@ class _SchoolCheckState extends State<SchoolCheck> {
   }
 
   /// 인증 확인
-  void verifyCode() {
+  void verifyCode() async {
     if (codeController.text.trim() == sentCode) {
-      Navigator.pushReplacement(
+
+      final result = await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) =>
-          const SchoolCheckOk(),
+          builder: (_) => const SchoolCheckOk(),
         ),
       );
+
+      if (result == true) {
+        Navigator.pop(context, true);
+      }
+
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -87,7 +92,6 @@ class _SchoolCheckState extends State<SchoolCheck> {
       );
     }
   }
-
   @override
   void dispose() {
     emailController.dispose();
