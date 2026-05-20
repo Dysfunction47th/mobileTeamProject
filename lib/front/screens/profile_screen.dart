@@ -233,21 +233,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: const Center(
                     child: Text('😊', style: TextStyle(fontSize: 40))),
               ),
-              Positioned(
-                right: 0,
-                bottom: 0,
-                child: Container(
-                  width: 26,
-                  height: 26,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFF6B9D),
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 2),
-                  ),
-                  child: const Icon(Icons.edit_rounded,
-                      color: Colors.white, size: 13),
-                ),
-              ),
             ],
           ),
           const SizedBox(height: 12),
