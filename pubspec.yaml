@@ -14,10 +14,10 @@ dependencies:
   web_socket_channel: ^3.0.1
 
   # 카카오 SDK
-  kakao_flutter_sdk: ^2.0.0+1
-  kakao_flutter_sdk_user: ^2.0.0+1
-  kakao_flutter_sdk_share: ^2.0.0+1
-  kakao_flutter_sdk_talk: ^2.0.0+1
+  kakao_flutter_sdk: ^1.9.1
+  kakao_flutter_sdk_user: ^1.9.1
+  kakao_flutter_sdk_share: ^1.9.1
+  kakao_flutter_sdk_talk: ^1.9.1
   # 로그
   logger: ^2.0.2
   # env
