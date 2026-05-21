@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_team_project/front/screens/profile_screen.dart';
+import 'package:mobile_team_project/backend/user_data/user_data.dart';
+
 
 class SchoolCheckOk extends StatelessWidget {
   const SchoolCheckOk({super.key});
@@ -22,8 +24,8 @@ class SchoolCheckOk extends StatelessWidget {
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () {
-                // 인증 완료 후 프로필 화면으로 이동 (스택 유지)
-                Navigator.pop(context,true);
+                UserData.isSchoolVerified = true; // 인증 완료 저장
+                Navigator.pop(context, true);
               },
               child: const Text('확인'),
             ),
