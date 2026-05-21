@@ -85,38 +85,38 @@ class _MatchingTabScreenState extends State<MatchingTabScreen> {
       return;
     }
 
-    // 🔄 실시간 패킷 리스너 가동
+// 🔄 실시간 패킷 리스너 가동
     stream.listen((data) {
+      print("📩 [소켓 수신]: $data"); // ◀ 로그를 통해 패킷이 진짜 오는지 확인!
       try {
         final Map<String, dynamic> decoded = jsonDecode(data.toString());
 
-        // 서버로부터 매칭 완료(match_start) 시그널을 받았을 때
         if (decoded['type'] == 'match_start') {
+          print("🎯 [매칭 성공] 서버로부터 신호 수신됨!"); // ◀ 여기까지 찍히는지 확인
+
           final senderData = decoded['sender'] ?? {};
           final opponentNick = senderData['nickname'] ?? '익명 상대방';
           final opponentGender = senderData['gender'] ?? '여성';
 
+          // [핵심] 여기서 setState로 매칭 상태를 먼저 해제하고 안전하게 전환
           if (mounted) {
             setState(() => _isMatching = false);
 
-            // 1. 🔴 핵심 개조: 상대방이 남성 패킷을 보내거나 노트북 가상 세션(영희)일 때도 확실히 🌸 프로필로 포장
             final matchedRoom = ChatRoom(
               id: 'matched_room_session',
               nickname: opponentNick,
               lastMessage: '연결되었습니다.',
               time: '방금',
-              emoji: (opponentGender.contains('female') || opponentGender == '여성' || opponentGender == '남성' || opponentNick.contains('영희')) ? '🌸' : '⭐',
+              emoji: '🌸',
             );
 
-            // 2. 딜레이 없이 정식 채팅방 화면으로 슬라이딩 전환!
+            // 딜레이 없이 즉시 화면 전환
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (_) => ChatRoomScreen(room: matchedRoom),
               ),
-            ).then((_) {
-              if (mounted) setState(() => _isMatching = false);
-            });
+            );
           }
         }
       } catch (e) {
@@ -128,14 +128,12 @@ class _MatchingTabScreenState extends State<MatchingTabScreen> {
     final matchRequestPacket = jsonEncode({
       'type': 'match_start',
       'filter': {
-        'gender': _myGender == '남성' ? '여성' : '남성', // 교차 검증 유도
+        'gender': _myGender == '남성' ? '여성' : '남성',
         'years': _selectedYears.toList(),
-        'department': _selectedDept
       },
       'myProfile': {
         'nickname': user.nickname ?? "익명 유저",
         'gender': _myGender,
-        'department': '소프트웨어학과' // 고정 틀 탈피용 (프로필 학과 입력 연동 대비)
       }
     });
 
