@@ -61,6 +61,10 @@ class HomeScreen extends StatelessWidget {
 
                   // 안내 배너
                   _buildNoticeBanner(),
+                  const SizedBox(height: 16),
+
+                  // 학교 인증 안내 (미인증 시에만 표시)
+                  if (!UserData.isSchoolVerified) _buildSchoolVerifyBanner(),
                   const SizedBox(height: 32),
                 ],
               ),
@@ -152,7 +156,6 @@ class HomeScreen extends StatelessWidget {
               horizontal: 16,
               vertical: 14,
             ),
-
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(14),
@@ -166,7 +169,6 @@ class HomeScreen extends StatelessWidget {
                 ),
               ],
             ),
-
             child: Row(
               children: [
 
@@ -228,7 +230,6 @@ class HomeScreen extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
-
       decoration: BoxDecoration(
         color: const Color(0xFFFFF0F5),
         borderRadius: BorderRadius.circular(14),
@@ -236,12 +237,10 @@ class HomeScreen extends StatelessWidget {
           color: const Color(0xFFFFCCDD).withOpacity(0.6),
         ),
       ),
-
       child: const Row(
         children: [
           Text('📢', style: TextStyle(fontSize: 18)),
           SizedBox(width: 10),
-
           Expanded(
             child: Text(
               '매너 있는 대화 문화를 함께 만들어요.\n불쾌한 대화 상대는 신고할 수 있습니다.',
@@ -249,6 +248,43 @@ class HomeScreen extends StatelessWidget {
                 fontSize: 12.5,
                 color: Color(0xFF997788),
                 height: 1.5,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 학교 인증 안내 배너 (미인증 시에만 표시)
+  Widget _buildSchoolVerifyBanner() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: const Color(0xFFFFCCDD)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: const Row(
+        children: [
+          Text('🔒', style: TextStyle(fontSize: 18)),
+          SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              '프로필에서 학교 이메일 인증을 해야\n매칭을 시작할 수 있어요.',
+              style: TextStyle(
+                fontSize: 12.5,
+                color: Color(0xFFFF6B9D),
+                height: 1.5,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),

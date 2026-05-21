@@ -5,14 +5,15 @@ import 'package:mobile_team_project/backend/user_data/user_data.dart'; // 유저
 import 'package:mobile_team_project/front/models/models.dart'; // ChatRoom 모델 연결
 import 'package:mobile_team_project/front/screens/chat_room_screen.dart'; // 정식 채팅방 화면 연결
 
-class MatchingTabScreen extends StatefulWidget {
-  const MatchingTabScreen({super.key});
+// 학교 인증 후 매칭 화면 (매칭 시작하기 버튼 활성화)
+class MatchingTabScreen2 extends StatefulWidget {
+  const MatchingTabScreen2({super.key});
 
   @override
-  State<MatchingTabScreen> createState() => _MatchingTabScreenState();
+  State<MatchingTabScreen2> createState() => _MatchingTabScreen2State();
 }
 
-class _MatchingTabScreenState extends State<MatchingTabScreen> {
+class _MatchingTabScreen2State extends State<MatchingTabScreen2> {
   // 직접 선택하는 성별
   String _myGender = '남성';
 
@@ -85,7 +86,7 @@ class _MatchingTabScreenState extends State<MatchingTabScreen> {
       return;
     }
 
-// 🔄 실시간 패킷 리스너 가동
+    // 🔄 실시간 패킷 리스너 가동
     stream.listen((data) {
       print("📩 [소켓 수신]: $data"); // ◀ 로그를 통해 패킷이 진짜 오는지 확인!
       try {
@@ -96,7 +97,6 @@ class _MatchingTabScreenState extends State<MatchingTabScreen> {
 
           final senderData = decoded['sender'] ?? {};
           final opponentNick = senderData['nickname'] ?? '익명 상대방';
-          final opponentGender = senderData['gender'] ?? '여성';
 
           // [핵심] 여기서 setState로 매칭 상태를 먼저 해제하고 안전하게 전환
           if (mounted) {

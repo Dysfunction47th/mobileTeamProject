@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_team_project/front/screens/matching_tab_screen.dart';
+import 'package:mobile_team_project/backend/user_data/user_data.dart';
+import 'package:mobile_team_project/front/screens/matching_tab_screen1.dart';
+import 'package:mobile_team_project/front/screens/matching_tab_screen2.dart';
 import 'package:mobile_team_project/front/screens/chat_list_screen.dart';
 
 // ══════════════════════════════════════════════════════
 //  매칭 홈 화면
 //  TabBar: 매칭 탭 | 채팅 탭
+//  학교 인증 여부에 따라 MatchingTabScreen1/2 전환
 // ══════════════════════════════════════════════════════
 class MatchingHomeScreen extends StatefulWidget {
   const MatchingHomeScreen({super.key});
@@ -31,6 +34,11 @@ class _MatchingHomeScreenState extends State<MatchingHomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    // 학교 인증 여부에 따라 매칭 탭 화면 전환
+    final matchingTab = UserData.isSchoolVerified
+        ? const MatchingTabScreen2()
+        : const MatchingTabScreen1();
+
     return Scaffold(
       backgroundColor: const Color(0xFFFFF8FB),
       appBar: AppBar(
@@ -54,9 +62,9 @@ class _MatchingHomeScreenState extends State<MatchingHomeScreen>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: const [
-          MatchingTabScreen(),
-          ChatListScreen(),
+        children: [
+          matchingTab,
+          const ChatListScreen(),
         ],
       ),
     );

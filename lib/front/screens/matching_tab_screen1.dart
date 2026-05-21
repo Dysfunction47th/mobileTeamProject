@@ -5,14 +5,15 @@ import 'package:mobile_team_project/backend/user_data/user_data.dart'; // 유저
 import 'package:mobile_team_project/front/models/models.dart'; // ChatRoom 모델 연결
 import 'package:mobile_team_project/front/screens/chat_room_screen.dart'; // 정식 채팅방 화면 연결
 
-class MatchingTabScreen extends StatefulWidget {
-  const MatchingTabScreen({super.key});
+// 학교 인증 전 매칭 화면 (매칭 시작하기 버튼 비활성화)
+class MatchingTabScreen1 extends StatefulWidget {
+  const MatchingTabScreen1({super.key});
 
   @override
-  State<MatchingTabScreen> createState() => _MatchingTabScreenState();
+  State<MatchingTabScreen1> createState() => _MatchingTabScreen1State();
 }
 
-class _MatchingTabScreenState extends State<MatchingTabScreen> {
+class _MatchingTabScreen1State extends State<MatchingTabScreen1> {
   // 직접 선택하는 성별
   String _myGender = '남성';
 
@@ -45,99 +46,25 @@ class _MatchingTabScreenState extends State<MatchingTabScreen> {
     return sorted.join(', ');
   }
 
-  // 🔴 실시간 매칭 시작 및 소켓 빨대 리스너 가동
-  void _onMatchStart() async {
-    if (_selectedYears.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Row(
-            children: [
-              Icon(Icons.warning_rounded, color: Colors.white, size: 18),
-              SizedBox(width: 8),
-              Text('학년을 선택해주세요!', style: TextStyle(fontWeight: FontWeight.w600)),
-            ],
-          ),
-          backgroundColor: const Color(0xFFFF8C42),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          margin: const EdgeInsets.all(16),
-          duration: const Duration(seconds: 2),
+  // 학교 인증 전 매칭 버튼 클릭 시 안내 스낵바
+  void _onMatchStart() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Row(
+          children: [
+            Icon(Icons.info_rounded, color: Colors.white, size: 18),
+            SizedBox(width: 8),
+            Text('프로필에서 학교 이메일 인증을 해주세요!',
+                style: TextStyle(fontWeight: FontWeight.w600)),
+          ],
         ),
-      );
-      return;
-    }
-
-    final user = UserData.user;
-    if (user == null) {
-      print("⚠️ 로그인된 유저 정보가 없습니다.");
-      return;
-    }
-
-    setState(() => _isMatching = true);
-
-    // 소켓 서버 물리적 연결
-    final socketManager = SocketManager();
-    final stream = await socketManager.connect();
-
-    if (stream == null) {
-      print("❌ 소켓 서버 연결 실패. IP 주소나 서버 구동 여부를 확인하세요.");
-      setState(() => _isMatching = false);
-      return;
-    }
-
-// 🔄 실시간 패킷 리스너 가동
-    stream.listen((data) {
-      print("📩 [소켓 수신]: $data"); // ◀ 로그를 통해 패킷이 진짜 오는지 확인!
-      try {
-        final Map<String, dynamic> decoded = jsonDecode(data.toString());
-
-        if (decoded['type'] == 'match_start') {
-          print("🎯 [매칭 성공] 서버로부터 신호 수신됨!"); // ◀ 여기까지 찍히는지 확인
-
-          final senderData = decoded['sender'] ?? {};
-          final opponentNick = senderData['nickname'] ?? '익명 상대방';
-          final opponentGender = senderData['gender'] ?? '여성';
-
-          // [핵심] 여기서 setState로 매칭 상태를 먼저 해제하고 안전하게 전환
-          if (mounted) {
-            setState(() => _isMatching = false);
-
-            final matchedRoom = ChatRoom(
-              id: 'matched_room_session',
-              nickname: opponentNick,
-              lastMessage: '연결되었습니다.',
-              time: '방금',
-              emoji: '🌸',
-            );
-
-            // 딜레이 없이 즉시 화면 전환
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => ChatRoomScreen(room: matchedRoom),
-              ),
-            );
-          }
-        }
-      } catch (e) {
-        print("⚠️ 매칭 파싱 에러 발생: $e");
-      }
-    });
-
-    // 🔴 내 조건(filter)과 카카오 API에서 뽑아온 내 정보(myProfile) 전송 패킷 조립
-    final matchRequestPacket = jsonEncode({
-      'type': 'match_start',
-      'filter': {
-        'gender': _myGender == '남성' ? '여성' : '남성',
-        'years': _selectedYears.toList(),
-      },
-      'myProfile': {
-        'nickname': user.nickname ?? "익명 유저",
-        'gender': _myGender,
-      }
-    });
-
-    socketManager.send(matchRequestPacket);
+        backgroundColor: const Color(0xFFFF6B9D),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        margin: const EdgeInsets.all(16),
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 
   // 🔴 매칭 취소 처리 로직
@@ -174,6 +101,10 @@ class _MatchingTabScreenState extends State<MatchingTabScreen> {
               const SizedBox(height: 28),
 
               _buildNotice(),
+              const SizedBox(height: 16),
+
+              // 학교 인증 안내 배너
+              _buildVerifyBanner(),
               const SizedBox(height: 16),
 
               _buildMatchButton(),
@@ -402,58 +333,44 @@ class _MatchingTabScreenState extends State<MatchingTabScreen> {
     );
   }
 
-  Widget _buildMatchButton() {
-    if (_isMatching) {
-      return Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: const Color(0xFFFFCCDD)),
-        ),
-        child: Row(
-          children: [
-            const SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(strokeWidth: 2.5, color: Color(0xFFFF6B9D)),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                '${_myGender == '남성' ? '여성' : '남성'} / $_yearText / $_selectedDept 매칭 중...',
-                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF2D2D2D)),
-                overflow: TextOverflow.ellipsis,
+  // 학교 인증 안내 배너
+  Widget _buildVerifyBanner() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFF0F5),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: const Color(0xFFFFCCDD)),
+      ),
+      child: const Row(
+        children: [
+          Icon(Icons.lock_rounded, color: Color(0xFFFF6B9D), size: 16),
+          SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              '프로필에서 학교 이메일 인증을 완료해야\n매칭을 시작할 수 있어요',
+              style: TextStyle(
+                fontSize: 12.5,
+                color: Color(0xFFFF6B9D),
+                height: 1.5,
               ),
             ),
-            const SizedBox(width: 8),
-            GestureDetector(
-              onTap: _onMatchCancel,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFEEEEEE),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: const Text(
-                  '취소',
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF888888)),
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    }
+          ),
+        ],
+      ),
+    );
+  }
 
+  // 비활성화된 매칭 버튼
+  Widget _buildMatchButton() {
     return SizedBox(
       width: double.infinity,
       height: 52,
       child: ElevatedButton(
         onPressed: _onMatchStart,
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFFFF6B9D),
+          backgroundColor: const Color(0xFFCCCCCC),
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
           elevation: 0,
