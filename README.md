@@ -261,9 +261,9 @@ flutter run
 |---|-------------------------------------------------|
 | <img src="./readmeImg/login.jpg" width="200"> | <img src="./readmeImg/profile.jpg" width="200"> |
 
-| 채팅 화면 | 매칭 화면 |
-|---|---|
-| <img src="./readmeImg/chat.jpg" width="200"> | <img src="./readmeImg/matching.jpg" width="200"> |
+| 채팅 화면                                           | 매칭 화면 |
+|-------------------------------------------------|---|
+| <img src="./readmeImg/chating.jpg" width="200"> | <img src="./readmeImg/matching.jpg" width="200"> |
 
 # 💡 기대 효과
 
