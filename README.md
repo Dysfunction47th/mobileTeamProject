@@ -257,13 +257,13 @@ flutter run
 
 # 🖼 화면 예시
 
-| 로그인 화면 | 프로필 화면 |
-|---|---|
-| <img src="./readmeImg/login.jpg" width="200"> | <img src="./readmeImg/profile.png" width="200"> |
+| 로그인 화면 | 프로필 화면                                          |
+|---|-------------------------------------------------|
+| <img src="./readmeImg/login.jpg" width="200"> | <img src="./readmeImg/profile.jpg" width="200"> |
 
 | 채팅 화면 | 매칭 화면 |
 |---|---|
-| <img src="./readmeImg/chat.png" width="200"> | <img src="./readmeImg/matching.png" width="200"> |
+| <img src="./readmeImg/chat.jpg" width="200"> | <img src="./readmeImg/matching.jpg" width="200"> |
 
 # 💡 기대 효과
 
