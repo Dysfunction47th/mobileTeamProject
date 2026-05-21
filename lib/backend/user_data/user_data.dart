@@ -1,16 +1,18 @@
 import 'user_model.dart';
-import 'package:mobile_team_project/backend/user_data/user_model.dart';
+import 'package:flutter/material.dart';
 
 class UserData {
   static KakaoUser? user;
-  static bool isSchoolVerified = false; // 학교 인증 여부
+
+  // 플러터에서는 단순 변수로는 UI가 그 변경을 감지하지 못해 상태관리로 변경을 감지해야 화면이 갱신
+  // ex)static bool isSchoolVerified = false;
+  static ValueNotifier<bool> isSchoolVerified = ValueNotifier(false);
 
   static void setUser(KakaoUser newUser) {
     user = newUser;
   }
-
   static void clearUser() {
     user = null;
-    isSchoolVerified = false; // 로그아웃 시 인증 상태 초기화
+    isSchoolVerified.value = false;
   }
 }

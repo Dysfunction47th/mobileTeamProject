@@ -64,7 +64,7 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(height: 16),
 
                   // 학교 인증 안내 (미인증 시에만 표시)
-                  if (!UserData.isSchoolVerified) _buildSchoolVerifyBanner(),
+                  if (!UserData.isSchoolVerified.value) _buildSchoolVerifyBanner(),
                   const SizedBox(height: 32),
                 ],
               ),

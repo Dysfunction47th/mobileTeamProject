@@ -476,22 +476,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool isVerified = false;
 
   Widget _schoolCheckButton() {
-    return GestureDetector(
-      onTap: () async {
-        final result = await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => const SchoolCheck(),
-          ),
-        );
+      return GestureDetector(
+        onTap: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const SchoolCheck(),
+            ),
+          );
 
-        // 인증 완료 후 true 반환되면 상태 변경
-        if (result == true) {
-          setState(() {
-            isVerified = true;
-          });
-        }
-      },
+          // 인증 완료 후 true 반환되면 상태 변경
+          // if (result == true) {
+          //   setState(() {
+          //     isVerified = true;
+          //   });
+          // }
+          if (result == true) {
+            setState(() {
+              UserData.isSchoolVerified.value = true;
+            });
+          }
+        },
+
+
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 14),
@@ -512,7 +519,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             // 인증 여부에 따라 텍스트 변경
             Text(
-              isVerified ? '인증 확인' : '학교 이메일 인증',
+                UserData.isSchoolVerified.value
+                    ? '인증 확인'
+                    : '학교 이메일 인증',
+
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,

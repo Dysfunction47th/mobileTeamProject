@@ -32,12 +32,9 @@ class _MatchingHomeScreenState extends State<MatchingHomeScreen>
     super.dispose();
   }
 
+
   @override
   Widget build(BuildContext context) {
-    // 학교 인증 여부에 따라 매칭 탭 화면 전환
-    final matchingTab = UserData.isSchoolVerified
-        ? const MatchingTabScreen2()
-        : const MatchingTabScreen1();
 
     return Scaffold(
       backgroundColor: const Color(0xFFFFF8FB),
@@ -60,12 +57,22 @@ class _MatchingHomeScreenState extends State<MatchingHomeScreen>
           ],
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          matchingTab,
-          const ChatListScreen(),
-        ],
+      body: ValueListenableBuilder<bool>(
+        valueListenable: UserData.isSchoolVerified,
+
+        builder: (context, verified, child) {
+          return TabBarView(
+            controller: _tabController,
+            children: [
+              // 학교 인증 여부에 따라 매칭 탭 화면 전환
+              verified
+                  ? const MatchingTabScreen2()
+                  : const MatchingTabScreen1(),
+
+              const ChatListScreen(),
+            ],
+          );
+        },
       ),
     );
   }

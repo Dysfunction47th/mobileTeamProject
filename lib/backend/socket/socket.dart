@@ -12,8 +12,8 @@ class SocketManager {
 
   // 💡 데스크톱 및 노트북이 서로 통신하기 위한 주소 세팅
   String get _url {
-    const String serverIp = "121.156.245.162"; // 동희님 데스크톱 IPv4 주소
-    // const String serverIp = "    10.2.3.1"; // 동희님 데스크톱 IPv4 주소
+    // const String serverIp = "121.156.245.162"; // 동희님 데스크톱 IPv4 주소
+    const String serverIp = "192.168.50.185"; // 동희님 데스크톱 IPv4 주소
 
     return "ws://$serverIp:4001";
   }

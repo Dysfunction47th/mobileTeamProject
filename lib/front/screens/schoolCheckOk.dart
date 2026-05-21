@@ -24,7 +24,7 @@ class SchoolCheckOk extends StatelessWidget {
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () {
-                UserData.isSchoolVerified = true; // 인증 완료 저장
+                UserData.isSchoolVerified.value = true; // 인증 완료 저장
                 Navigator.pop(context, true);
               },
               child: const Text('확인'),
