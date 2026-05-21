@@ -68,7 +68,7 @@
 
 ---
 
-# 🔄 매칭 프로세스
+# 🔄 앱 진행 프로세스
 
 ```text
 카카오 로그인
@@ -111,7 +111,6 @@
 | 기술 | 설명 |
 |---|---|
 | flutter_dotenv | 환경 변수 관리 |
-| .env | 민감 정보 보호 |
 
 ---
 
@@ -132,7 +131,10 @@ root
 │  └─front
 │      ├─models
 │      └─screens
+│      └─main_navigation.dart
 │
+│─main.dart 
+│      
 ├─test
 ├─web
 └─windows
@@ -142,24 +144,25 @@ root
 
 # 📁 폴더 설명
 
-| 폴더 | 설명 |
-|---|---|
-| `backend/login` | 카카오 로그인 처리 |
-| `backend/mail` | 학교 이메일 인증 처리 |
-| `backend/socket` | 실시간 채팅 소켓 처리 |
-| `backend/user_data` | 사용자 데이터 관리 |
-| `front/models` | 사용자 모델 관리 |
-| `front/screens` | 앱 UI 화면 구성 |
+| 폴더                  | 설명           |
+|---------------------|--------------|
+| `backend/config`    | .env 파일 처리   |
+| `backend/login`     | 카카오 로그인 처리   |
+| `backend/mail`      | 학교 이메일 인증 처리 |
+| `backend/socket`    | 실시간 채팅 소켓 처리 |
+| `backend/user_data` | 사용자 데이터 관리   |
+| `front/models`      | 사용자 모델 관리    |
+| `front/screens`     | 앱 UI 화면 구성   |
 
 ---
 
-# 👥 팀 구성
+# 👥 팀(카페인중독) 구성
 
-| 이름 | 담당 |
-|---|---|
-| 태철 | Front-End |
-| 건욱 | Back-End |
-| 동희 | Back-End |
+| 이름      | 담당 |
+|---------|---|
+| 태철      | Front-End |
+| 건욱(팀장 ) | Back-End |
+| 동희      | Back-End |
 
 ---
 
@@ -256,13 +259,11 @@ flutter run
 
 | 로그인 화면 | 프로필 화면 |
 |---|---|
-| 추후 추가 예정 | 추후 추가 예정 |
+| <img src="./readmeImg/login.jpg" width="200"> | <img src="./readmeImg/profile.png" width="200"> |
 
 | 채팅 화면 | 매칭 화면 |
 |---|---|
-| 추후 추가 예정 | 추후 추가 예정 |
-
----
+| <img src="./readmeImg/chat.png" width="200"> | <img src="./readmeImg/matching.png" width="200"> |
 
 # 💡 기대 효과
 
