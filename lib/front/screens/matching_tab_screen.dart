@@ -371,7 +371,11 @@ class _MatchingTabScreenState extends State<MatchingTabScreen> {
     );
   }
 
+  // 선택한 카테고리 표시 배너
   Widget _buildNotice() {
+    final oppositeGender = _myGender == '남성' ? '여성' : '남성';
+    final yearText = _selectedYears.isEmpty ? '학년 미선택' : _yearText;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
@@ -384,15 +388,17 @@ class _MatchingTabScreenState extends State<MatchingTabScreen> {
         children: [
           const Icon(Icons.favorite_rounded, color: Color(0xFFFF6B9D), size: 14),
           const SizedBox(width: 6),
-          Text(
-            '${_myGender == '남성' ? '여성' : '남성'}과만 매칭됩니다',
-            style: const TextStyle(
-              fontSize: 12.5,
-              color: Color(0xFFFF6B9D),
-              fontWeight: FontWeight.w600,
+          Expanded(
+            child: Text(
+              '$oppositeGender / $yearText / $_selectedDept 로 매칭됩니다',
+              style: const TextStyle(
+                fontSize: 12.5,
+                color: Color(0xFFFF6B9D),
+                fontWeight: FontWeight.w600,
+              ),
+              textAlign: TextAlign.center,
             ),
           ),
-          Text('${_myGender == '남성' ? '여성' : '남성'} / $_yearText / $_selectedDept 로 매칭됩니다', style: const TextStyle(fontSize: 12.5, color: Color(0xFFFF6B9D), fontWeight: FontWeight.w600)),
         ],
       ),
     );
