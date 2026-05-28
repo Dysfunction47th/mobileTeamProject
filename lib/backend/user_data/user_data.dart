@@ -14,5 +14,6 @@ class UserData {
   static void clearUser() {
     user = null;
     isSchoolVerified.value = false;
+
   }
 }

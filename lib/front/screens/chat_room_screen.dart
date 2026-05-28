@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:mobile_team_project/front/models/models.dart';
-import 'package:mobile_team_project/backend/socket/socket.dart';
+import 'package:mobile_team_project/backend/client/client.dart'; // 소켓 매니저 연결
+
 import 'package:mobile_team_project/backend/user_data/user_data.dart';
 
 class ChatRoomScreen extends StatefulWidget {
@@ -381,3 +382,4 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     );
   }
 }
+

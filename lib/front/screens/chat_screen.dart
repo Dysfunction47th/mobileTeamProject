@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
-import 'package:mobile_team_project/backend/socket/socket.dart'; // 소켓 매니저 경로
+import 'package:mobile_team_project/backend/client/client.dart'; // 소켓 매니저 연결
 import 'package:mobile_team_project/backend/user_data/user_model.dart'; // 수정된 모델 경로
 
 //main에 있던 내용 여기로 옮김

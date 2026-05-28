@@ -1,5 +1,11 @@
 import 'dart:async';
+import 'package:mobile_team_project/backend/login/kakao_login.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:logger/logger.dart';
+import 'dart:io';
+
+
+final logger = Logger();
 
 class SocketManager {
   // 🔴 싱글톤 패턴 적용 (전역에서 단 하나의 소켓 인스턴스만 공유)
@@ -10,11 +16,20 @@ class SocketManager {
   WebSocketChannel? _channel;
   Stream? _broadcastStream;
 
+
+
+
+
   // 💡 데스크톱 및 노트북이 서로 통신하기 위한 주소 세팅
   String get _url {
+
+
     // const String serverIp = "121.156.245.162"; // 동희님 데스크톱 IPv4 주소
     const String serverIp = "192.168.50.185"; // 동희님 데스크톱 IPv4 주소
 
+
+
+    logger.i('serverIp');
     return "ws://$serverIp:4001";
   }
 
@@ -58,3 +73,5 @@ class SocketManager {
     _broadcastStream = null;
   }
 }
+
+

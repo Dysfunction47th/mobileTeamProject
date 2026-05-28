@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -26,12 +27,14 @@ Future<void> logoutWithKakao(BuildContext context) async {
   //   logger.i('연결 해제 실패 $error');
   // }
 
+
   if (!context.mounted) return;
 
   Navigator.pushAndRemoveUntil(
     context,
     MaterialPageRoute(
       builder: (_) => const LoginScreen(),
+
       //로그인 화면으로 바로 이동
     ),
     (route) => false,

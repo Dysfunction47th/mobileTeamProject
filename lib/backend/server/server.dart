@@ -15,9 +15,14 @@ class MatchUser {
   });
 }
 
+
 void main() async {
+
+
   final server = await HttpServer.bind(InternetAddress.anyIPv4, 4001);
   print("🚀 [서버 가동] 1:1 매칭 서버 대기 중... (포트: 4001)");
+
+
 
   List<MatchUser> waitingQueue = [];
   Map<String, MatchUser> activeChatRooms = {};
@@ -94,3 +99,7 @@ void main() async {
     }
   });
 }
+
+
+
+

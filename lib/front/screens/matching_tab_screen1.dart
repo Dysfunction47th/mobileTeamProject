@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:mobile_team_project/backend/socket/socket.dart'; // 소켓 매니저 연결
+import 'package:mobile_team_project/backend/client/client.dart'; // 소켓 매니저 연결
+
 import 'package:mobile_team_project/backend/user_data/user_data.dart'; // 유저 데이터 연결
 import 'package:mobile_team_project/front/models/models.dart'; // ChatRoom 모델 연결
 import 'package:mobile_team_project/front/screens/chat_room_screen.dart'; // 정식 채팅방 화면 연결
