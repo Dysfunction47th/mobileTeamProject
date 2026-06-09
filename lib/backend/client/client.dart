@@ -25,7 +25,7 @@ class SocketManager {
 
 
     // const String serverIp = "121.156.245.162"; // 동희님 데스크톱 IPv4 주소
-    const String serverIp = "192.168.50.185"; // 동희님 데스크톱 IPv4 주소
+    const String serverIp = "10.2.16.91"; // 동희님 데스크톱 IPv4 주소
 
 
 
