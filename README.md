@@ -149,7 +149,7 @@ root
 | `backend/config`    | .env 파일 처리   |
 | `backend/login`     | 카카오 로그인 처리   |
 | `backend/mail`      | 학교 이메일 인증 처리 |
-| `backend/socket`    | 실시간 채팅 소켓 처리 |
+| `backend/client`    | 실시간 채팅 소켓 처리 |
 | `backend/user_data` | 사용자 데이터 관리   |
 | `front/models`      | 사용자 모델 관리    |
 | `front/screens`     | 앱 UI 화면 구성   |
@@ -261,9 +261,9 @@ flutter run
 |---|-------------------------------------------------|
 | <img src="./readmeImg/login.jpg" width="200"> | <img src="./readmeImg/profile.jpg" width="200"> |
 
-| 채팅 화면                                           | 매칭 화면 |
-|-------------------------------------------------|---|
-| <img src="./readmeImg/chating.jpg" width="200"> | <img src="./readmeImg/matching.jpg" width="200"> |
+| 채팅 화면                                        | 매칭 화면 |
+|----------------------------------------------|---|
+| <img src="./readmeImg/chat.jpg" width="200"> | <img src="./readmeImg/matching.jpg" width="200"> |
 
 # 💡 기대 효과
 
